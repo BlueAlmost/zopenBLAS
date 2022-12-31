@@ -1,0 +1,30 @@
+1) in the OpenBLAS source directory, edit the "openblas_config_template.h"
+   file.  Here is the diff output
+
+
+(develop) OpenBLAS > diff openblas_config_template.h openblas_config_template.h.orig 
+69,72c69,75
+<   typedef struct { float real, imag; } openblas_complex_float;
+<   typedef struct { double real, imag; } openblas_complex_double;
+<   typedef struct { xdouble real, imag; } openblas_complex_xdouble;
+< #define openblas_make_complex_float(real, imag)    ((real) + ((imag) * _Complex_I))
+---
+> #ifndef __cplusplus
+>   #include <complex.h>
+> #endif
+>   typedef float _Complex openblas_complex_float;
+>   typedef double _Complex openblas_complex_double;
+>   typedef xdouble _Complex openblas_complex_xdouble;
+>   #define openblas_make_complex_float(real, imag)    ((real) + ((imag) * _Complex_I))
+
+2) compile with make, then make install
+
+3) in level_1.zig ... need to map the xres.real to res.re ... or something cleaner.
+
+
+4)  look at line 5 of level_1.zig.  then look at line 36.  Should line 10 use
+    something like line 5 instead?  And what about ../zOpenBLAS.zig file?
+
+
+
+
